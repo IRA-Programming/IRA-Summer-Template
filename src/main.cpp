@@ -13,7 +13,7 @@
 #include "PID.h"
 #include "autons.h"
 #include "auton-selector.h"
-#include "arm.h"
+#include "lift.h"
 #include "functions.h"
 
 using namespace vex;
@@ -94,6 +94,13 @@ bool inauton = false;
 // Drivetrain functions in functions.cpp
 
 
+//Variables used in driver control
+double intakeSpeed = 0;
+bool buttonL1Held = false;
+bool buttonL2Held = false;
+
+bool buttonXHeld = false;
+
 // User control function
 void usercontrol(void) {
 
@@ -112,36 +119,49 @@ void usercontrol(void) {
     spinLeftDT(leftPower * DRIVER_SPEED_FACTOR);
     spinRightDT(rightPower * DRIVER_SPEED_FACTOR);
 
-    // ========== ARM CONTROL ========== //
-   // if (Controller.ButtonR1.pressing()) {
-     // Arm1.spin(forward, 75, percent);
-     // Arm2.spin(forward, 75, percent);
-    //} else if (Controller.ButtonR2.pressing()) {
-     // Arm1.spin(reverse, 75, percent);
-     // Arm2.spin(reverse, 75, percent);
-    //} else {
-      //Arm1.stop(hold);
-     // Arm2.stop(hold);
-    //}
+    // ========== Lift CONTROL ========== //
+    // Hold down the R1 and R2 buttons to use the lift //
+    if (Controller.ButtonR1.pressing()) {
+      Lift1.spin(forward, 75, percent);
+      Lift2.spin(forward, 75, percent);
+    } 
+    else if (Controller.ButtonR2.pressing()) {
+      Lift1.spin(reverse, 75, percent);
+      Lift2.spin(reverse, 75, percent);
+    } 
+    else {
+      Lift1.stop(hold);
+      Lift2.stop(hold);
+    }
 
     // ========== INTAKE ========== //
-    //output for the intake//
-    if (Controller.ButtonL1.pressing()) {
-      bottomIntakeMotor.spin(forward, 100, percent);
-      middleIntakeMotor.spin(reverse, 100, percent);
-      topIntakeMotor.spin(forward, 100, percent); 
-      wait(20, msec);
+    // Tap the L1 and L2 buttons to set the intake speed. Tap the same button again to stop //
+    if (Controller.ButtonL1.pressing() && intakeSpeed != 100 && !buttonL1Held) {
+      intakeMotor.spin(forward, 100, percent);
+      intakeSpeed = 100;
+      buttonL1Held = true;
     } 
-   
-    else if (Controller.ButtonL2.pressing()) {
-      bottomIntakeMotor.spin(reverse, 100, percent);
-      middleIntakeMotor.spin(forward, 100, percent);
-      topIntakeMotor.spin(reverse, 100, percent);
+    else if(Controller.ButtonL1.pressing() && intakeSpeed == 100 && !buttonL1Held) {
+      intakeMotor.stop(coast);
+      intakeSpeed = 0;
+      buttonL1Held = true;
+    }
+    else if (Controller.ButtonL2.pressing() && intakeSpeed != -100 && !buttonL2Held) {
+      intakeMotor.spin(reverse, 100, percent);
+      intakeSpeed = -100;
+      buttonL2Held = true;
     } 
-    else if (Controller.ButtonR1.pressing()){
-        bottomIntakeMotor.stop();
-        middleIntakeMotor.stop();
-        topIntakeMotor.stop();
+    else if (Controller.ButtonL2.pressing() && intakeSpeed == -100 && !buttonL2Held){
+      intakeMotor.stop(coast);
+      intakeSpeed = 0;
+      buttonL2Held = true;
+    }
+
+    if(!Controller.ButtonL1.pressing()) {
+      buttonL1Held = false;
+    }
+    if(!Controller.ButtonL2.pressing()) {
+      buttonL2Held = false;
     }
  
     // ========== COLOR SENSOR ========== //
@@ -164,6 +184,16 @@ void usercontrol(void) {
     Brain.Screen.printAt(50, 70, "Hue: %.2f", hue);
     Brain.Screen.printAt(50, 90, "Brightness: %.2f", brightness);
     Brain.Screen.clearScreen();
+
+    // ========== PNEUMATICS ========== //
+    // Use the X button to toggle the piston position //
+    if(Controller.ButtonX.pressing() && !buttonXHeld) {
+      DoubleActingPiston.set(!DoubleActingPiston.value());
+      buttonXHeld = true;
+    }
+    else if(!Controller.ButtonX.pressing()) {
+      buttonXHeld = false;
+    }
 
     // ========== LOOP DELAY ========== //
     wait(20, msec);

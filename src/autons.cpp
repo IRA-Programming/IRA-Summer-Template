@@ -1,7 +1,7 @@
 #include "robot-config.h"
 #include "vex.h"
 #include "PID.h"
-#include "arm.h"
+#include "lift.h"
 #include "functions.h"
 #include "autons.h"
 

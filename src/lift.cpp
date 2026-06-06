@@ -1,11 +1,11 @@
-#include "arm.h"
+#include "lift.h"
 #include "robot-config.h"
 using namespace vex;
 
 
 void liftArm(double deg, double speed) {
-    Arm1.spinToPosition(deg, degrees, speed);
-    Arm2.spinToPosition(deg, degrees, speed);
+    Lift1.spinToPosition(deg, degrees, speed);
+    Lift2.spinToPosition(deg, degrees, speed);
 }
 
 void clamp() {
