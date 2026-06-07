@@ -14,12 +14,12 @@
 
 vex::brain Brain;
 vex::controller Controller(vex::controllerType::primary);
-vex::motor LB(vex::PORT3, vex::gearSetting::ratio6_1, true); //Left Back Motor
-vex::motor LM(vex::PORT8,  vex::gearSetting::ratio6_1, true); //Left Middle Motor
-vex::motor LF(vex::PORT1, vex::gearSetting::ratio6_1, true); //Left Front Motor
-vex::motor RB(vex::PORT4, vex::gearSetting::ratio6_1, false); //Right Back Motor
-vex::motor RM(vex::PORT5, vex::gearSetting::ratio6_1, false); //Right Middle Motor
-vex::motor RF(vex::PORT2, vex::gearSetting::ratio6_1, false); //Right Front Motor
+vex::motor LB(vex::PORT6, vex::gearSetting::ratio6_1, true); //Left Back Motor
+vex::motor LM(vex::PORT5,  vex::gearSetting::ratio6_1, true); //Left Middle Motor
+vex::motor LF(vex::PORT4, vex::gearSetting::ratio6_1, true); //Left Front Motor
+vex::motor RB(vex::PORT1, vex::gearSetting::ratio6_1, false); //Right Back Motor
+vex::motor RM(vex::PORT2, vex::gearSetting::ratio6_1, false); //Right Middle Motor
+vex::motor RF(vex::PORT3, vex::gearSetting::ratio6_1, false); //Right Front Motor
 
 
 vex::motor_group leftDrive(LF, LM, LB);
@@ -28,13 +28,13 @@ vex::motor_group rightDrive(RF, RM, RB);
 // Drivetrain: wheel travel = 320mm, track width = 280mm, wheelbase = 300mm (adjust as needed)
 vex::drivetrain Drivetrain(leftDrive, rightDrive, 82.55, 280, 300);
 
-vex::motor Lift1(vex::PORT1, vex::gearSetting::ratio18_1, true); //Lift motor
-vex::motor Lift2(vex::PORT2, vex::gearSetting::ratio18_1, true); //Lift motor
+vex::motor Lift1(vex::PORT14, vex::gearSetting::ratio18_1, true); //Lift motor
+vex::motor Lift2(vex::PORT15, vex::gearSetting::ratio18_1, true); //Lift motor
 
 vex::digital_out DoubleActingPiston(Brain.ThreeWirePort.A);
 vex::digital_out SingleActingPiston(Brain.ThreeWirePort.B);
 
-vex::motor intakeMotor(vex::PORT14, vex::gearSetting::ratio6_1, false); //Right Front Motor
+vex::motor intakeMotor(vex::PORT16, vex::gearSetting::ratio6_1, false); //Right Front Motor
 //vex::motor middleIntakeMotor(vex::PORT13, vex::gearSetting::ratio6_1, true); //Right Front Motor
 //vex::motor  bottomIntakeMotor(vex::PORT12, vex::gearSetting::ratio6_1, false); 
 
