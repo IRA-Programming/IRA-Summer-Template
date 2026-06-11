@@ -70,6 +70,10 @@ void autonomous(void) {
       skillsAuton();
       break;
 
+    case 3:
+      leftAuton();
+      break;
+
     default:
       Brain.Screen.print("No valid auton selected!");
       break;

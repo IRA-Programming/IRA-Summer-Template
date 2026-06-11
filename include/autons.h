@@ -7,4 +7,5 @@
 void rightAuton();
 void classAuton();
 void skillsAuton();
+void leftAuton();
 

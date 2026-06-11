@@ -9,8 +9,8 @@ void autonomous(void);
 
 int selectedAuton = 0;
 
-const std::string autonNames[] = { "Right Auton", "Class Auton", "Skills"};
-const int autonCount = 3;
+const std::string autonNames[] = { "Right Auton", "Class Auton", "Skills", "Left Auton"};
+const int autonCount = 4;
 
 int getSelectedAuton() {
   return selectedAuton;

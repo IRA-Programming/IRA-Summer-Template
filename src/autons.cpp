@@ -27,9 +27,15 @@ void classAuton() {
 }
 
 void skillsAuton() {
-  
+
   //Use functions to create a programming skills routine
-  
+
+}
+
+void leftAuton() {
+
+  //Extra placeholder auton
+
 }
 
 
