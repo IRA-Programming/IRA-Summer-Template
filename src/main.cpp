@@ -63,7 +63,7 @@ void autonomous(void) {
       break;
 
     case 1:
-      leftAuton();
+      classAuton();
       break;
 
     case 2:

@@ -5,6 +5,6 @@
 
 //Autons//
 void rightAuton();
-void leftAuton();
+void classAuton();
 void skillsAuton();
 

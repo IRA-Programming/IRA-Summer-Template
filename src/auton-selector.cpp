@@ -4,9 +4,12 @@
 
 using namespace vex;
 
+// Defined in main.cpp - lets us trigger the auton routine from the selector
+void autonomous(void);
+
 int selectedAuton = 0;
 
-const std::string autonNames[] = { "Right Auton", "Left Auton", "Skills"};
+const std::string autonNames[] = { "Right Auton", "Class Auton", "Skills"};
 const int autonCount = 3;
 
 int getSelectedAuton() {
@@ -55,9 +58,19 @@ void displayAutonSelector() {
     wait(20, msec);
   }
 
+  // Holding X selected the auton - now count down and start it automatically
+  for (int i = 3; i > 0; i--) {
+    Controller.Screen.clearLine(3);
+    Controller.Screen.setCursor(3, 1);
+    Controller.Screen.print("Starting in %d...", i);
+    wait(1, sec);
+  }
+
   Controller.Screen.clearLine(3);
   Controller.Screen.setCursor(3, 1);
-  Controller.Screen.print("Auton selected");
-  wait(2, sec);
+  Controller.Screen.print("Auton running!");
+
+  autonomous();
+
   Controller.Screen.clearLine(3);
 }

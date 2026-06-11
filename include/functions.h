@@ -23,6 +23,9 @@ void runIntake();
 void stopIntake();
 void runoutake();
 
+void spinDTWithDistance(double inches, double velocity);
+void turnDTWithAngle(double angle, double velocity);
+
 void spinDTPosition(double velocity, double targetInches);
 void turnForTime(double velocity, double time);
 

@@ -20,9 +20,9 @@ void rightAuton() {
 
 
 
-void leftAuton() {
-  
-  //Use functions to create an auton for the right side of the field
+void classAuton() {
+
+  //Write your own auton here!
 
 }
 
