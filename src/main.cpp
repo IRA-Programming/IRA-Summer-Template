@@ -21,6 +21,9 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
+// True while an auton routine is running, so usercontrol doesn't fight it for the drivetrain
+bool inauton = false;
+
 
 // define your global instances of motors and other devices here
 
@@ -55,7 +58,7 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  
+
   switch (getSelectedAuton()) {
 
     case 0:
@@ -78,8 +81,6 @@ void autonomous(void) {
       Brain.Screen.print("No valid auton selected!");
       break;
   }
- 
-
 
 }
 
@@ -92,8 +93,6 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
-
-bool inauton = false;
 
 // Drivetrain functions in functions.cpp
 
@@ -112,6 +111,13 @@ void usercontrol(void) {
   const double DRIVER_SPEED_FACTOR = 0.6; //can adjust your driver speed here
 
   while (true) {
+
+    // While an auton is running (e.g. triggered from the selector), pause driver
+    // control so it doesn't override the auton's motor commands.
+    if (inauton) {
+      wait(20, msec);
+      continue;
+    }
 
     // ========== DRIVE CONTROL ========== //
     double fwd = Controller.Axis3.position(percent);

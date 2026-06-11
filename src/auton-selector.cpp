@@ -1,11 +1,21 @@
 #include "vex.h"
 #include "auton-selector.h"
 #include "robot-config.h"
+#include "functions.h"
 
 using namespace vex;
 
 // Defined in main.cpp - lets us trigger the auton routine from the selector
 void autonomous(void);
+
+// Defined in main.cpp - true while an auton is running so driver control stands down
+extern bool inauton;
+
+// Wrapper so the auton routine can run in its own task alongside the countdown
+int runAutonTask() {
+  autonomous();
+  return 0;
+}
 
 int selectedAuton = 0;
 
@@ -66,11 +76,24 @@ void displayAutonSelector() {
     wait(1, sec);
   }
 
-  Controller.Screen.clearLine(3);
-  Controller.Screen.setCursor(3, 1);
-  Controller.Screen.print("Auton running!");
+  // Run the auton in its own task while we show the 15-second auton-period
+  // countdown. Driver control stays locked out (inauton) until the count hits 0.
+  inauton = true;
+  vex::task autonTask(runAutonTask);
 
-  autonomous();
+  for (int t = 15; t >= 0; t--) {
+    Controller.Screen.clearLine(3);
+    Controller.Screen.setCursor(3, 1);
+    Controller.Screen.print("Auton %d", t);
+    if (t > 0) {
+      wait(1, sec);
+    }
+  }
+
+  // Auton period over - stop the routine and hand control back to the driver
+  autonTask.stop();
+  stopDT();
+  inauton = false;
 
   Controller.Screen.clearLine(3);
 }
