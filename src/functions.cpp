@@ -75,7 +75,7 @@ void stopIntake(){
 void spinDTWithDistance(double inches, double velocity) {
     setDTPosition(0);
     spinDT(velocity);
-    while (LF.position(degrees) < inchesToDegrees(inches)) {
+    while (fabs(LF.position(degrees)) < fabs(inchesToDegrees(inches))) {
         vex::task::sleep(20);
     }
     stopDT();
