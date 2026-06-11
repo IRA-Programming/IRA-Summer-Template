@@ -11,9 +11,22 @@ void autonomous(void);
 // Defined in main.cpp - true while an auton is running so driver control stands down
 extern bool inauton;
 
-// Wrapper so the auton routine can run in its own task alongside the countdown
-int runAutonTask() {
-  autonomous();
+// Set true by the countdown task once the 15-second auton period has elapsed
+bool autonCountdownDone = false;
+
+// Runs in its own task: shows the 15-second auton-period countdown on the
+// controller screen (screen only - no motor control) while the auton routine
+// runs on the main thread.
+int runCountdownDisplay() {
+  for (int t = 15; t >= 0; t--) {
+    Controller.Screen.clearLine(3);
+    Controller.Screen.setCursor(3, 1);
+    Controller.Screen.print("Auton %d", t);
+    if (t > 0) {
+      vex::task::sleep(1000);
+    }
+  }
+  autonCountdownDone = true;
   return 0;
 }
 
@@ -76,22 +89,20 @@ void displayAutonSelector() {
     wait(1, sec);
   }
 
-  // Run the auton in its own task while we show the 15-second auton-period
-  // countdown. Driver control stays locked out (inauton) until the count hits 0.
+  // Lock out the driver, then run the auton routine on THIS thread (the proven
+  // movement path) while the 15-second countdown ticks in a separate display task.
   inauton = true;
-  vex::task autonTask(runAutonTask);
+  autonCountdownDone = false;
+  vex::task countdownTask(runCountdownDisplay);
 
-  for (int t = 15; t >= 0; t--) {
-    Controller.Screen.clearLine(3);
-    Controller.Screen.setCursor(3, 1);
-    Controller.Screen.print("Auton %d", t);
-    if (t > 0) {
-      wait(1, sec);
-    }
+  autonomous();
+
+  // Keep the driver locked out until the 15-second countdown reaches 0
+  while (!autonCountdownDone) {
+    wait(20, msec);
   }
 
-  // Auton period over - stop the routine and hand control back to the driver
-  autonTask.stop();
+  // Auton period over - hand control back to the driver
   stopDT();
   inauton = false;
 
