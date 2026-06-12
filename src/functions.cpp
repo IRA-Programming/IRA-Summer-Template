@@ -82,14 +82,14 @@ void spinDTWithDistance(double inches, double velocity) {
 }
 
 void turnDTWithAngle(double angle, double velocity) {
-    InertialSensor.setHeading(0, degrees);
+    InertialSensor.setRotation(0, degrees);
     RF.spin(forward, velocity, percent);
     RM.spin(forward, velocity, percent);
     RB.spin(forward, velocity, percent);
     LF.spin(reverse, velocity, percent);
     LM.spin(reverse, velocity, percent);
     LB.spin(reverse, velocity, percent);
-    while (fabs(InertialSensor.heading(degrees)) < fabs(angle)) {
+    while (fabs(InertialSensor.rotation(degrees)) < fabs(angle)) {
         vex::task::sleep(20);
     }
     stopDT();
